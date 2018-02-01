@@ -1,0 +1,44 @@
+{
+    "name": "ahmeti/laravel-auto-git-pull",
+    "description": "Laravel Auto Git Pull",
+    "homepage": "https://github.com/ahmeti/laravel-auto-git-pull",
+    "keywords": [
+        "laravel",
+        "auto",
+        "git",
+        "pull"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ahmet Imamoglu",
+            "email": "ahmet363@gmail.com",
+            "role": "Developer",
+            "homepage": "https://ahmetimamoglu.com.tr"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "phpseclib/phpseclib": ">=2.0"
+
+
+    },
+    "require-dev": {},
+    "config": {
+        "optimize-autoloader": true,
+        "minimum-stability": "dev"
+    },
+    "autoload": {
+        "psr-0": {
+            "Ahmeti\\LaravelAutoGitPull": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "aliases": {},
+            "providers": [
+                "Ahmeti\\LaravelAutoGitPull\\Providers\\LaravelAutoGitPullServiceProvider"
+            ]
+        }
+    }
+}
