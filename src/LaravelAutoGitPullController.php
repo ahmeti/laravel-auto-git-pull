@@ -11,18 +11,17 @@ class LaravelAutoGitPullController extends Controller {
     public function pull(Request $request)
     {
         if(
+            ! is_null(env('AUTO_PULL_SECRET')) &&
             ! is_null(env('AUTO_PULL_DIR')) &&
             ! is_null(env('AUTO_PULL_SERVER_IP')) &&
             ! is_null(env('AUTO_PULL_SSH_USER')) &&
-            ! is_null(env('AUTO_PULL_SECRET')) &&
             ! is_null($request->secret) &&
-            env('AUTO_PULL_SECRET') == $request->secret
+            env('AUTO_PULL_SECRET') === $request->secret
         ){
-
-            if( ! is_nul(env('AUTO_PULL_SSH_PRIVATE_KEY')) ){
+            if( ! is_null(env('AUTO_PULL_SSH_PRIVATE_KEY')) ){
                 return $this->connetSSHWithKey();
 
-            }elseif( ! is_nul(env('AUTO_PULL_SSH_USER_PASS')) ){
+            }elseif( ! is_null(env('AUTO_PULL_SSH_USER_PASS')) ){
                 return $this->connetSSHWithPassword();
 
             }else{
@@ -33,8 +32,10 @@ class LaravelAutoGitPullController extends Controller {
 
     private function connetSSHWithKey()
     {
+        $privateKey=file_get_contents(base_path(env('AUTO_PULL_SSH_PRIVATE_KEY')));
+
         $key = new RSA();
-        $key->loadKey(file_get_contents(base_path(env('AUTO_PULL_SSH_PRIVATE_KEY'))));
+        $key->loadKey($privateKey);
 
         $ssh = new SSH2(env('AUTO_PULL_SERVER_IP'));
         if (!$ssh->login(env('AUTO_PULL_SSH_USER'), $key)) {
@@ -56,11 +57,9 @@ class LaravelAutoGitPullController extends Controller {
 
     private function processPull($ssh)
     {
-        $ssh->exec('cd '.env('AUTO_PULL_DIR'));
-        $ssh->exec('git stash save --keep-index');
-        $ssh->exec('git pull');
+        $data=$ssh->exec('cd '.env('AUTO_PULL_DIR').' && git stash save --keep-index && git pull');
         $ssh->exec('exit');
 
-        return response()->json(['status' => true]);
+        return response()->json(['status' => true, 'data' => $data]);
     }
 }
