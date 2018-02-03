@@ -28,6 +28,8 @@ class LaravelAutoGitPullController extends Controller {
 
             return response()->json(['status' => false, 'message'=>'Connection failed with key or password.']);
         }
+
+        return response()->json(['status' => false, 'message'=>'Please check .env variables.']);
     }
 
     private function connetSSHWithKey()
@@ -39,7 +41,7 @@ class LaravelAutoGitPullController extends Controller {
 
         $ssh = new SSH2(env('AUTO_PULL_SERVER_IP'));
         if (!$ssh->login(env('AUTO_PULL_SSH_USER'), $key)) {
-            return response()->json(['status' => false, 'message'=>'Connection failed with key.']);
+            return response()->json(['status' => false, 'message'=>'Connection failed with rsa key.', 'errors'=>$ssh->getErrors()]);
         }
 
         return $this->processPull($ssh);
@@ -49,7 +51,7 @@ class LaravelAutoGitPullController extends Controller {
     {
         $ssh = new SSH2(env('AUTO_PULL_SERVER_IP'));
         if (!$ssh->login(env('AUTO_PULL_SSH_USER'), env('AUTO_PULL_SSH_USER_PASS'))) {
-            return response()->json(['status' => false, 'message'=>'Connection failed with password.']);
+            return response()->json(['status' => false, 'message'=>'Connection failed with password.', 'errors'=>$ssh->getErrors()]);
         }
 
         return $this->processPull($ssh);
@@ -60,6 +62,6 @@ class LaravelAutoGitPullController extends Controller {
         $message=$ssh->exec('cd '.env('AUTO_PULL_DIR').' && git stash save --keep-index && git pull');
         $ssh->exec('exit');
 
-        return response()->json(['status' => true, 'message' => $message]);
+        return response()->json(['status' => true, 'message' => $message, 'errors'=>$ssh->getErrors()]);
     }
 }
