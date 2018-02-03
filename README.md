@@ -19,3 +19,18 @@ Route::any('/auto-git-pull', '\Ahmeti\LaravelAutoGitPull\LaravelAutoGitPullContr
 ```code
 http://site.com/api/auto-git-pull?secret=xxxxxxxxxxxxxxxxxx
 ```
+
+## Result
+```json
+{
+    "status": true,
+    "message": "Success!",
+    "data": [
+        "No local changes to save",
+        "Already up-to-date."
+    ],
+    "errors": [
+        
+    ]
+}
+```
