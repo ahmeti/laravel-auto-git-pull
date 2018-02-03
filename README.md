@@ -15,7 +15,7 @@ AUTO_PULL_SSH_USER_PASS=
 Route::any('/auto-git-pull', '\Ahmeti\LaravelAutoGitPull\LaravelAutoGitPullController@pull');
 ```
 
-## Create Webhook Url on Bitbucket.co
+## Create Webhook Url on Bitbucket.com
 ```code
 http://site.com/api/auto-git-pull?secret=xxxxxxxxxxxxxxxxxx
 ```
